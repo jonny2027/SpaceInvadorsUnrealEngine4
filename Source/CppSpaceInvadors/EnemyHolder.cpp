@@ -2,6 +2,7 @@
 
 #include "CppSpaceInvadors.h"
 #include "EnemyHolder.h"
+#include "Bullet.h"
 #include "Enemy.h"
 
 
@@ -33,6 +34,9 @@ AEnemyHolder::AEnemyHolder()
 	SpawnDelayRangeLow = 1.0f;
 	SpawnDelayRangeHigh = 4.5f;
 
+
+	moveDownDistance = 50.0f;
+
 }
 
 // Called when the game starts or when spawned
@@ -60,13 +64,46 @@ void AEnemyHolder::Tick(float DeltaTime)
 		timerSinceMove = 0;
 		makeEnemyFire();
 	}
+	FMath::Rand() % 500 == 0;
+	if()
+}
+
+void AEnemyHolder::resetEnemy()
+{
+	spawnEnemies();
+	// delete spawn bullets
+	for (auto b : bullets)
+	{
+		if (b && !b->IsActorBeingDestroyed())
+		{
+			b->Destroy();
+		}
+	}
+	bullets.Empty();
+}
+void AEnemyHolder::moveEnemyDown()
+{
+	// Loop for all the enemies 
+	for (auto e : Enemies)
+	{
+		auto location = e->GetActorLocation();
+		e->SetActorLocation(FVector(location.X, location.Y, location.Z - moveDownDistance));
+		if (movingRight == true)
+		{
+			movingRight = false;
+		}
+		else
+		{
+			movingRight = true;
+		}
+	}
 }
 
 void AEnemyHolder::makeEnemyFire()
 {
 
 	int32 enemyToFire = FMath::RandRange(0, Enemies.Num() -1 );
-	Enemies[enemyToFire]->fire();
+	bullets.Add(Enemies[enemyToFire]->fire());
 }
 
 void setMovementActive(bool bShouldMove)
@@ -87,41 +124,46 @@ void setMovementActive(bool bShouldMove)
 
 void AEnemyHolder::spawnEnemies()
 {
-	// Check valid enemy 
-	//if (enemyObj = NULL)
+
+	// Remove any enmies left on the screen
+
+	for (auto e : Enemies)
 	{
-		// Check for a valid World: 
-		UWorld* const world = GetWorld();
-		if (world)
+		e->Destroy();
+	}
+
+	// Check for a valid World: 
+	UWorld* const world = GetWorld();
+	if (world)
+	{
+		// Set the spawn params
+		FActorSpawnParameters spawnParams;
+		spawnParams.Owner = this;
+		spawnParams.Instigator = Instigator;
+
+		// Loop for the colums
+		for (int col = 0; col < numOfCols; col++)
 		{
-			// Set the spawn params
-			FActorSpawnParameters spawnParams;
-			spawnParams.Owner = this;
-			spawnParams.Instigator = Instigator;
-
-			// Loop for the colums
-			for (int col = 0; col < numOfCols; col++)
+			// Loop for the Rows 
+			for (int row = 0; row < numOfRows; row++)
 			{
-				// Loop for the Rows 
-				for (int row = 0; row < numOfRows; row++)
-				{
 
 
-					// Set Location of spawning 
-					// Location based off the top left location then moved based of the distance between the enmies 
-					FVector locationToSpawn = toLeftLocation - FVector(-row * gapBetweenEnemies, 0, col * gapBetweenEnemies);
-					FTransform tranformOfSpawn;
-					tranformOfSpawn.SetLocation(locationToSpawn);
-					//  Spawn 
-					AEnemy* const spawnedEnemy = world->SpawnActor<AEnemy>(enemyObj, tranformOfSpawn, spawnParams);
+				// Set Location of spawning 
+				// Location based off the top left location then moved based of the distance between the enmies 
+				FVector locationToSpawn = toLeftLocation - FVector(-row * gapBetweenEnemies, 0, col * gapBetweenEnemies);
+				FTransform tranformOfSpawn;
+				tranformOfSpawn.SetLocation(locationToSpawn);
+				//  Spawn 
+				AEnemy* const spawnedEnemy = world->SpawnActor<AEnemy>(enemyObj, tranformOfSpawn, spawnParams);
 
-					Enemies.Add(spawnedEnemy);
+				Enemies.Add(spawnedEnemy);
 					
 
-				}
 			}
 		}
 	}
+	
 
 	furthestLeft = Enemies[0];
 	furthestRight = Enemies[numOfCols * numOfRows - 1];
@@ -170,31 +212,13 @@ void AEnemyHolder::moveEnemies()
 
 	if (furthestRight->GetActorLocation().X > 1780 && movingRight == true)
 	{
-		//moveEnemiesDown();
+		moveEnemyDown();
 		movingRight = false;
 	}
 	else if (furthestLeft->GetActorLocation().X < -150 && movingRight == false)
 	{
-		//moveEnemiesDown();
+		moveEnemyDown();
 		movingRight = true;
 	}
 }
 
-void AEnemyHolder::moveEnemiesDown()
-{
-
-
-		for (auto g : Enemies)
-		{
-
-			FVector location = g->GetActorLocation();
-
-
-
-				location -= FVector(0, 0, gapBetweenEnemies / 4);
-
-				g->SetActorLocation(location);
-			}
-	
-
-}

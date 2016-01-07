@@ -17,7 +17,7 @@ class CPPSPACEINVADORS_API AEnemy : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AEnemy();
-
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
@@ -42,7 +42,7 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "Enemy")
-	void fire();
+	ABullet* fire();
 
 protected:
 

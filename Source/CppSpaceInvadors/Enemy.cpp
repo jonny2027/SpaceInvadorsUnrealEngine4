@@ -38,12 +38,12 @@ void AEnemy::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 
 }
-void AEnemy::fire()
+ABullet* AEnemy::fire()
 {
+	ABullet* returnval = nullptr;
+
 	if (bullet != NULL)
 	{
-
-
 		// Check for a valid World: 
 		UWorld* const World = GetWorld();
 
@@ -65,13 +65,14 @@ void AEnemy::fire()
 
 			// spawn the pickup
 			ABullet* const SpawnBullet = World->SpawnActor<ABullet>(bullet, SpawnLocation, SpawnRotation, SpawnParams);
-
-
 			SpawnBullet->setFirier(this);
+			returnval = SpawnBullet;
+
 		}
 
 
 	}
+	return returnval;
 }
 void AEnemy::beenHit()
 {

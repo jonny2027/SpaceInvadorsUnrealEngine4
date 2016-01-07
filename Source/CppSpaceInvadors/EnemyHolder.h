@@ -25,7 +25,14 @@ public:
 	//UFUNCTION(BlueprintCallable, Category = "Enemy")
 	//void setMovementActive(bool bShouldMove);
 
+	UFUNCTION(BlueprintCallable, Category = "Enemy")
+	void resetEnemy();
 protected:
+
+
+	UFUNCTION(BlueprintCallable, Category = "Enemy")
+	void moveEnemyDown();
+
 
 	/* The Object that going to used to spawn */
 	UPROPERTY(EditAnywhere, Category = "Enemy")
@@ -46,6 +53,10 @@ protected:
 	/* How far each enmie will move after each update */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
 	float movePerMovment;
+
+	/* How far each ememy will move down  */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+	float moveDownDistance;
 
 	FTimerHandle SpawnTimer;
 
@@ -97,7 +108,9 @@ private:
 	/* A Array with all Enemies spawned*/
 	TArray<class AEnemy*> Enemies;
 
-	void moveEnemiesDown();
+	/* A Array with all bullets spawned*/
+	TArray<class ABullet*> bullets;
+
 	bool movingRight = true;
 
 	/* The current fire delay*/

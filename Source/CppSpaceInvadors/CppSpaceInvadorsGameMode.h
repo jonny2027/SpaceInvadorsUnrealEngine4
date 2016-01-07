@@ -18,18 +18,26 @@ public:
 
 	virtual void BeginPlay() override;
 
-
+	virtual void Tick(float DeltaSeconds) override;
 
 protected: 
 
-	///* The widget Class to use for our hub screen*/
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Score", Meta = (BluePrintProtected = "true"))
-	//TSubclassOf<class UUserWidget> HUDWidgetClass;
+	UPROPERTY(EditAnywhere, Category = "Enemy")
 
-	///* The instance of the HUD */
-	//UPROPERTY()
-	//class UUserWidget* CurrentWidget;
+	TSubclassOf<class AEnemyHolder> eHolder;
+
+
+	/* Reset the level and set everything back to pos */
+	UFUNCTION(BlueprintCallable, Category = "GamePlay")
+	void resetLvl();
+
 private:
-	/* Controls all the enemies */
+
+	// the player lives for the moment 
+	int32 pLives;
+
+	class AMyPlayer* player;
+
+	class AEnemyHolder* enemyHolder;
 
 };

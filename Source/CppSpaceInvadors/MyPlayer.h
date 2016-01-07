@@ -58,9 +58,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	void  playerHit();
 
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	bool  isPlayerDead();
+
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	void  setIsPlayerDead(bool newState);
 protected:
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player", Meta = (BluePrintProtected))
+	bool isDead = false;
 
 	UPROPERTY(EditAnywhere, Category = "Player")
 	TSubclassOf<class ABullet> bullet;

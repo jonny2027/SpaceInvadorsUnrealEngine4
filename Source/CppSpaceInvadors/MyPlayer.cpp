@@ -137,7 +137,11 @@ int32 AMyPlayer::getLives()
 void AMyPlayer::playerHit()
 {
 	lives -= 1;
-
+	isDead = true;
+	ABullet* const testBullet = Cast<ABullet>(bullet);
+	if (testBullet && !testBullet->IsPendingKill()) {
+		testBullet->Destroy();
+	}
 }
 void  AMyPlayer::updateScore(int32 s)
 {
@@ -152,4 +156,15 @@ int32 AMyPlayer::getCurrentScore()
 void   AMyPlayer::setIsBulletActive(bool newState)
 {
 	isBulletActive = newState;
+}
+
+bool AMyPlayer::isPlayerDead()
+{
+	return isDead;
+	
+}
+
+void  AMyPlayer::setIsPlayerDead(bool newState)
+{
+	isDead = newState;
 }

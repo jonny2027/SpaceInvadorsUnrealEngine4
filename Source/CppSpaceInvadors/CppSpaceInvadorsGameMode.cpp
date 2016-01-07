@@ -4,7 +4,7 @@
 #include "CppSpaceInvadorsGameMode.h"
 #include "MyPlayer.h"
 #include "Kismet/GameplayStatics.h"
-//#include "Blueprint/UserWidget.h"
+#include "EnemyHolder.h"
 #include "MyPlayerController.h"
 
 ACppSpaceInvadorsGameMode::ACppSpaceInvadorsGameMode()
@@ -30,21 +30,41 @@ void ACppSpaceInvadorsGameMode::BeginPlay()
 	Super::BeginPlay();
 	
 	
-	AActor* player =  UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	AActor* play =  UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 
 	FVector playerLocation = FVector(1110, 0, -1200);
 	FRotator playerRotation = FRotator(0, 0, 0);
 
-	//player->SetActorLocation(playerLocation);
-	//player->SetActorRotation(playerRotation);
+	// Check for a valid World: 
+	UWorld* const world = GetWorld();
+	if (world)
+	{
+		// Set the spawn params
+		FActorSpawnParameters spawnParams;
+		spawnParams.Owner = this;
+		spawnParams.Instigator = Instigator;
+		FVector locationToSpawn =FVector(0, 0,  0);
+		FTransform tranformOfSpawn;
+		tranformOfSpawn.SetLocation(locationToSpawn);
 
-	//if (HUDWidgetClass != nullptr)
-	//{
-	//	CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetClass);
-	//	if (CurrentWidget != nullptr)
-	//	{
-	//		CurrentWidget->AddToViewport();
-	//	}
+		// Spawn enemy holder
+		enemyHolder = world->SpawnActor<AEnemyHolder>(eHolder,tranformOfSpawn);
+	}
 
-	//}
+	player = Cast<AMyPlayer>(play);
+	
+}
+void ACppSpaceInvadorsGameMode::Tick(float DeltaSeconds)
+{
+
+	if (player->isPlayerDead())
+	{
+		resetLvl();
+		player->setIsPlayerDead(false);
+	}
+}
+void ACppSpaceInvadorsGameMode::resetLvl()
+{
+	enemyHolder->resetEnemy();
+	
 }
