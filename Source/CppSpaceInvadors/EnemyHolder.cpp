@@ -36,7 +36,7 @@ AEnemyHolder::AEnemyHolder()
 
 
 	moveDownDistance = 50.0f;
-
+	howOftenEnemyFire = 100;
 }
 
 // Called when the game starts or when spawned
@@ -62,10 +62,13 @@ void AEnemyHolder::Tick(float DeltaTime)
 	{
 		moveEnemies();
 		timerSinceMove = 0;
-		makeEnemyFire();
 	}
-	FMath::Rand() % 500 == 0;
-	if()
+	if (FMath::Rand() % howOftenEnemyFire == 0)
+	{
+		makeEnemyFire();
+
+	}
+
 }
 
 void AEnemyHolder::resetEnemy()
@@ -80,6 +83,8 @@ void AEnemyHolder::resetEnemy()
 		}
 	}
 	bullets.Empty();
+	movingRight = true;
+
 }
 void AEnemyHolder::moveEnemyDown()
 {
@@ -131,7 +136,7 @@ void AEnemyHolder::spawnEnemies()
 	{
 		e->Destroy();
 	}
-
+	Enemies.Empty();
 	// Check for a valid World: 
 	UWorld* const world = GetWorld();
 	if (world)

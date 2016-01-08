@@ -42,6 +42,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
 	int32 numOfRows;
 
+
+	/* Number of Collums of enemys*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+	int32 howOftenEnemyFire;
+
 	/* Number of Collums of enemys*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
 	int32 numOfCols;
